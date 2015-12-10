@@ -29,7 +29,7 @@ public:
 
     string    getResponse(string &opponentAnswer);
     string    getResponse(char* opponentAnswer);
-    string    getRandomCity() const;
+    string    getRandomCity();
     BOT_LEVEL getLevel() const;
     ushort    getTries() const;
 

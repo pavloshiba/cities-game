@@ -96,11 +96,15 @@ string GameBot::getResponse(char *opponentAnswer)
     }
 }
 
-string GameBot::getRandomCity() const
+string GameBot::getRandomCity()
 {
     srand((unsigned)time(0));
     int randIndex = rand()%_knowingCities.size() + 1;
-    return _knowingCities.at(randIndex);
+
+    std::string result = _knowingCities.at(randIndex);
+    _lastChar = result.back();
+
+    return result;
 }
 
 BOT_LEVEL GameBot::getLevel() const
