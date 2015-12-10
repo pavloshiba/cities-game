@@ -12,7 +12,6 @@ using std::endl;
 #include <cstring>
 using std::memset;
 
-
 #define END_GAME_CHAR '-'
 
 #define PLAYER_INFO_MESSAGE(x)  (std::string(BOT_FORB_MESAGE) + \
@@ -48,7 +47,6 @@ void ServerApp::Start()
         {
             const char* clientLocAddr;
             char recievingData[BUFF_SIZE];
-            char lastChar = 0;
 
             memset(recievingData,0,ARRAY_SIZE(recievingData));
 
@@ -64,7 +62,6 @@ void ServerApp::Start()
             bool isEnd = false;
 
             std::string responce = bot.getRandomCity();
-            lastChar = responce.back();
 
             client->send((void*)responce.c_str(),responce.size());
 
@@ -92,10 +89,10 @@ void ServerApp::Start()
                     {
                         responce = PLAYER_INFO_MESSAGE(bot.getTries());
                     }                  
-                    else
-                        lastChar = responce.back();
 
-                    } // TODO: debug
+
+                  } // TODO: debug
+                  else break;
                 
                     
                 client->send((void*)responce.c_str(),BUFF_SIZE);
