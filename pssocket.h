@@ -85,10 +85,10 @@ public:
 private:
     struct sockaddr_in	_LocalAddr;
     struct sockaddr_in	_RemoteAddr;
-    SOCKET				_Socket;
-    bool				_Connected;
+    SOCKET              _Socket;
+    bool                _Connected;
 
-    ESOCKETERRROR		_Error;
+    ESOCKETERRROR       _Error;
 };
 
 #endif // __XSOCKET_H_INCLUDED

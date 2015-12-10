@@ -32,8 +32,9 @@ typedef unsigned long long int uint64;
 
 
 #define BITS_IN_BYTE	8
-#define APP_PORT        1993
-#define APP_HOST        "localhost"
+
+#define DEFAULT_APP_PORT        1993
+#define DEFAULT_APP_HOST        "localhost"
 
 typedef unsigned short ushort;
 typedef unsigned long ulong;

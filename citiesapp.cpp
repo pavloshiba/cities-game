@@ -24,20 +24,30 @@ using std::memset;
 
 const int BUFF_SIZE = 127;
 
-const char START_MESSAGE[] = "Hello! Let's play!('-' to surrender)";
+const char START_MESSAGE[] = "Hello! Let's play!(Press '-' to surrender)";
 const char OVER_MESSAGE[] =  "Game over! Buy!";
 
 
+CitiesApp::CitiesApp(ushort port) : _port(port)
+{}
+
+ServerApp::ServerApp()
+    : CitiesApp(DEFAULT_APP_PORT)
+{}
+
+ServerApp::ServerApp(ushort port)
+    : CitiesApp(port)
+{}
+
 void ServerApp::Start()
 {
-    psSocket sock;
+    psSocket mainSocket;
 
     cout << "Server started....\n";
 
-    sock.listen(APP_PORT);
-
+    mainSocket.listen(_port);
     
-    while(psSocket* client = sock.accept())
+    while(psSocket* client = mainSocket.accept())
     {
 
         if (client != NULL)
@@ -107,34 +117,45 @@ void ServerApp::Start()
     
 }
 
+ClientApp::ClientApp()
+    : CitiesApp(DEFAULT_APP_PORT),
+      _host(DEFAULT_APP_HOST)
+{}
+
+ClientApp::ClientApp(const std::string &host, ushort port)
+    : CitiesApp(port),
+      _host(host)
+{
+}
+
 void ClientApp::Start()
 {
     char replay = 'n';
     do
     {
-        psSocket sock;
+        psSocket mainSocket;
         char recievingData[BUFF_SIZE];
         std::string responce = "";
 
         memset(recievingData,0,ARRAY_SIZE(recievingData));
 
-        cout << "Start connecting to " << APP_HOST << " " << APP_PORT << endl;
+        cout << "Start connecting to " << DEFAULT_APP_HOST << " " << DEFAULT_APP_PORT << endl;
 
-        if (sock.connect(APP_HOST,APP_PORT))
+        if (mainSocket.connect(_host, _port))
         {
             cout << "Connected....\n";
             cout << "Choose game difficulty(0 - easy, 1 - medium, 2 - hard)\n";
-            int botLevel;
-            cin >> botLevel;
+
+            char botLevel = cin.get();
             cin.ignore();
 
-            sock.send((void*)&botLevel,sizeof(botLevel));
+            mainSocket.send((void*)&botLevel,sizeof(botLevel));
             cout << START_MESSAGE << endl;
 
             do
             {
 
-                if (sock.recv(recievingData, BUFF_SIZE) != 0)
+                if (mainSocket.recv(recievingData, BUFF_SIZE) != 0)
                 {
                     if (END_GAME_CHAR == responce[0])
                     {
@@ -159,55 +180,20 @@ void ClientApp::Start()
 
                     std::getline(std::cin,responce);
 
-                    sock.send((void*)responce.c_str(),BUFF_SIZE);
+                    mainSocket.send((void*)responce.c_str(),BUFF_SIZE);
 
                 } else break;
 
             } while(true);
         }
+        else
+        {
+            cout << "Cannot connect to server...." << endl;
+            break;
+        }
 
-        sock.close();
+        mainSocket.close();
         cout << "Would you like to replay?(y/n)";
 
     }while (cin >> replay && replay == 'y');
 }
-
-
-
-/*
-                if ((END_GAME_CHAR == recievingData[0]) || (PLAYER_TRIES == 0))
-                {
-                    if (client->send((void*)SERVER_WIN_SIGNAL, sizeof(SERVER_WIN_SIGNAL)) != 0)
-                    {
-                        cout << "Player " << clientLocAddr << " over the game!" << endl;
-                        client->close();
-                        sock.shutdown();
-                        break;
-                    }
-
-                }
-
-                if (recievingData[0] == lastChar) // first player's symbol same as last  symbol
-                {
-                    responce = bot.getResponse(recievingData);
-
-                    if (BOT_LOSE == responce)
-                    {
-                        client->send((void*)SERVER_LOSE_SIGNAL,sizeof(SERVER_LOSE_SIGNAL));
-                        client->close();
-                        sock.shutdown();
-                        break;
-                    }
-
-                    lastChar = responce.back();
-                    client->send((void*)responce.c_str(),BUFF_SIZE);
-
-                } // TODO: debug
-                else
-                {
-                    --PLAYER_TRIES;
-                    client->send((void*)PLAYER_INFO_MESSAGE.c_str(),BUFF_SIZE);
-
-                }
-
-*/
