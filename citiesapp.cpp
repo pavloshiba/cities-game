@@ -2,9 +2,6 @@
 #include "pssocket.h"
 #include "macroses.h"
 
-#include <thread>
-
-using std::thread;
 using std::cout;
 using std::cin;
 using std::endl;
