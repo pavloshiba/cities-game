@@ -1,2 +1,6 @@
 # cities-game
-simple game to test sockets at windows/unix
+simple game "Cities"
+Console interface
+Client-Server architecture
+https://github.com/starand/ - thanks for socket wrappers class 
+windows/unix
