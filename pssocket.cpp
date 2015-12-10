@@ -11,16 +11,19 @@
 #endif
 
 
-static const char g_szEmptyAddress[] = "";
+static const char szEMPTY_ADRESS[] = "";
+const int BUFF_SIZE = 24;
 
 
 #ifdef WINDOWS
 #	include <Ws2tcpip.h>
-//#	pragma warning(disable : 4996)
 #	pragma comment(lib, "ws2_32.lib")
     typedef int socklen_t;
 
 bool g_bWsaInitialized;
+
+unsigned char  bLow = 2;
+unsigned char  bHigh = 2;
 
 void init_socket()
 {
@@ -28,7 +31,7 @@ void init_socket()
     {
         WSADATA wdData;
 
-        int nResult = WSAStartup(MAKEWORD(2, 2), &wdData);
+        int nResult = WSAStartup(MAKEWORD(bLow,bHigh), &wdData);
         ASSERTE(nResult == 0);
 
         g_bWsaInitialized = true;
@@ -65,7 +68,7 @@ int closesocket(SOCKET socket)
 #endif
 
 
-const char *g_aszSocketErrorArray[SE__MAX] =
+const char *SOCKET_ERROR_ARRAY[SE__MAX] =
 {
     "",	//SE_NO_ERROR,
 
@@ -82,7 +85,7 @@ const char *g_aszSocketErrorArray[SE__MAX] =
 const char *GetErrorDescription(ESOCKETERRROR error)
 {
     ASSERT(IN_RANGE(error, SE__MIN, SE__MAX));
-    return g_aszSocketErrorArray[error];
+    return SOCKET_ERROR_ARRAY[error];
 }
 
 psSocket::psSocket()
@@ -246,7 +249,6 @@ psSocket *psSocket::accept() const
     psResultSocket->_RemoteAddr = _RemoteAddr;
     psResultSocket->_Connected = true;
 
-
     return psResultSocket;
 }
 
@@ -408,7 +410,7 @@ const char *psSocket::getLocalAddress() const
 
     sockaddr saPeer;
     socklen_t nPeerLen  = sizeof(saPeer);
-    return getsockname(_Socket, &saPeer, &nPeerLen) ? g_szEmptyAddress : inet_ntoa(((sockaddr_in *)&saPeer)->sin_addr);
+    return getsockname(_Socket, &saPeer, &nPeerLen) ? szEMPTY_ADRESS : inet_ntoa(((sockaddr_in *)&saPeer)->sin_addr);
 }
 
 const char *psSocket::getRemoteAddress() const
@@ -417,7 +419,7 @@ const char *psSocket::getRemoteAddress() const
 
     sockaddr saPeer;
     socklen_t nPeerLen  = sizeof(saPeer);
-    return getpeername(_Socket, &saPeer, &nPeerLen) ? g_szEmptyAddress : inet_ntoa(((sockaddr_in *)&saPeer)->sin_addr);
+    return getpeername(_Socket, &saPeer, &nPeerLen) ? szEMPTY_ADRESS : inet_ntoa(((sockaddr_in *)&saPeer)->sin_addr);
 }
 
 
@@ -434,14 +436,14 @@ uint psSocket::getLaddr() const
 
 string psSocket::getLocalEndpoint() const
 {
-    char buffer[24];
+    char buffer[BUFF_SIZE];
     sprintf(buffer, "%s:%u", getLocalAddress(), getLocalPort());
     return buffer;
 }
 
 string psSocket::getRemoteEndpoint() const
 {
-    char buffer[24];
+    char buffer[BUFF_SIZE];
     sprintf(buffer, "%s:%u", getRemoteAddress(), getRemotePort());
     return buffer;
 }
