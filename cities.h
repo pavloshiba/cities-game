@@ -3,7 +3,11 @@
 
 #include "types.h"
 
-#define CITY_DATA_FILE "D:\\Dropbox\\Projects\\cities_socket_gl\\Debug\\cities.dat"
+#ifdef WINDOWS
+    #define CITY_DATA_FILE "D:\\Dropbox\\Projects\\cities_socket_gl\\Debug\\cities.dat"
+#else
+    #define CITY_DATA_FILE "cities.dat"
+#endif
 
 
 // namespace to operate with cities game logic
@@ -17,6 +21,6 @@ namespace Cities
 
     bool initData(const string& dataFile, string_v& cities);
     void citySort(string_v& cities);
-};
+}
 
 #endif // CITIES_H
