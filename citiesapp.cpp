@@ -103,7 +103,6 @@ void ServerApp::Start()
                 if (isEnd)
                 {
                     client->close();
-                    sock.shutdown();
                     break;
                 }
 
