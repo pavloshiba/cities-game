@@ -16,12 +16,11 @@ const string INCORRECT_CHARACTERS = "0123456789-=`!@#$%^&*()_+-[]\'/|\\\",.<> ";
 #define PLAYER_TRIES_MEDIUM 6
 #define PLAYER_TRIES_HARD   3
 
-GameBot::GameBot(BOT_LEVEL level)
-    :_level(level)
+GameBot::GameBot()
 {
-    initBot();
-    initTries();
 }
+
+GameBot::~GameBot() {}
 
 ushort GameBot::getTries() const
 { 
@@ -31,8 +30,9 @@ ushort GameBot::getTries() const
 string GameBot::getResponse(string &opponentAnswer)
 {
     if (_playerTries == 1) return BOT_WIN;
+
     removeCharsFromString(opponentAnswer, INCORRECT_CHARACTERS);
-    
+
     if ((opponentAnswer.size() == 0) || (opponentAnswer[0] != _lastChar))
     {
         --_playerTries;
@@ -88,7 +88,7 @@ string GameBot::getResponse(char *opponentAnswer)
 {
     string oponentAnswerStr(opponentAnswer);
     if (oponentAnswerStr.size() != 0)
-        return getResponse(oponentAnswerStr);
+        return this->getResponse(oponentAnswerStr);
     else 
     {
         --_playerTries;
@@ -107,55 +107,21 @@ string GameBot::getRandomCity()
     return result;
 }
 
-BOT_LEVEL GameBot::getLevel() const
-{
-    return _level;
-}
-
-void GameBot::setLevel(BOT_LEVEL level)
-{
-    _level = level;
-    initBot();
-}
-
 void GameBot::reset()
 {
     _forbiddenCities.clear();
 }
 
-void GameBot::initBot()
+void GameBot::initBot(int botFactor)
 {
     _forbiddenCities = string_v(0);
     Cities::initData(CITY_DATA_FILE,_knowingCities);
-
-    int factor = 0;
-
-    if (_level == BOT_LEVEL::HIGH)
-        return;
-    else if (_level == BOT_LEVEL::MEDIUM) // take away every 5th cities from _konwingCities
-        factor = 5;
-    else
-        factor = 2; // bot level is LOW -  take away every 2nd cities from _konwingCities
-
     random_shuffle(_knowingCities.begin(),_knowingCities.end());
 
-    factor = _knowingCities.size()/factor;
+    int eraseCount = _knowingCities.size() - (int)_knowingCities.size()/botFactor;
 
-    _knowingCities.erase(_knowingCities.begin(), _knowingCities.begin() + factor);
-
+    _knowingCities.erase(_knowingCities.begin(), _knowingCities.begin() + eraseCount);
     Cities::citySort(_knowingCities);
-}
-
-void GameBot::initTries()
-{
-   
-    if (BOT_LEVEL::HIGH == _level)
-        _playerTries = PLAYER_TRIES_HARD; // three tries for player with hard bot
-    else if (BOT_LEVEL::MEDIUM == _level)
-        _playerTries = PLAYER_TRIES_MEDIUM; // six tries for player with medium bot
-    else
-        _playerTries = PLAYER_TRIES_LOW;
-
 }
 
 void GameBot::removeCharsFromString(string &str, const string& charsToRemove)
@@ -165,4 +131,59 @@ void GameBot::removeCharsFromString(string &str, const string& charsToRemove)
       str.erase(std::remove(str.begin(), str.end(), charsToRemove[i]), str.end());
    }
 }
+
+LowBot::LowBot()
+{
+    int lowBotFactor = 12;
+    GameBot::initBot(lowBotFactor);
+    _playerTries = PLAYER_TRIES_LOW;
+}
+
+MediumBot::MediumBot()
+{
+    int mediumBotFactor = 5;
+    GameBot::initBot(mediumBotFactor);
+    _playerTries = PLAYER_TRIES_MEDIUM;
+}
+
+HardBot::HardBot()
+{
+    GameBot::initBot(1);
+    _playerTries = PLAYER_TRIES_HARD;
+}
+
+DontTrustrulBot::DontTrustrulBot() {}
+
+bool DontTrustrulBot::checkAnswer(const string& answer) const
+{
+    bool res = false;
+
+    auto it = std::find(_knowingCities.begin(),_knowingCities.end(), answer);
+
+    if(it != _knowingCities.end())
+        res = true;
+
+    return res;
+}
+
+/*virtual*/
+string DontTrustrulBot::getResponse(string& opponentAnswer)
+{
+    string res;
+    if(checkAnswer(opponentAnswer))
+        res = GameBot::getResponse(opponentAnswer);
+    else
+    {
+        --_playerTries;
+        if (_playerTries == 1)
+            res = BOT_WIN;
+        else
+            res = BOT_FORB;
+    }
+
+    return res;
+}
+
+
+
 

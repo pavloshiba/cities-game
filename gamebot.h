@@ -25,29 +25,61 @@ enum class BOT_LEVEL
 class GameBot
 {
 public:
-    explicit GameBot(BOT_LEVEL level = BOT_LEVEL::LOW);
+    virtual ~GameBot();
+    
+    virtual string getResponse(string &opponentAnswer);
 
-    string    getResponse(string &opponentAnswer);
-    string    getResponse(char* opponentAnswer);
-    string    getRandomCity();
-    BOT_LEVEL getLevel() const;
-    ushort    getTries() const;
-
-    void      setLevel(BOT_LEVEL level);
-    void      reset();
+    string getResponse(char* opponentAnswer);
+    string getRandomCity();
+    //BOT_LEVEL getLevel() const;
+    ushort getTries() const;
+    //void      setLevel(BOT_LEVEL level);
+    void reset();
 
 protected:
-    void      initBot();
-    void      initTries();
-    void      removeCharsFromString(string &str, const string &charsToRemove );
+    GameBot();
+    void initBot(int botFactor);
+    void removeCharsFromString(string &str, const string &charsToRemove );
 
 protected:
     string_v  _knowingCities;
     string_v  _forbiddenCities;
-    BOT_LEVEL _level;
+    //BOT_LEVEL _level;
     ushort    _playerTries;
     char      _lastChar;
 
+};
+
+class DontTrustrulBot : public GameBot
+{
+public:
+    /*virtual */ 
+    string getResponse(string &opponentAnswer);
+protected:
+    DontTrustrulBot();
+    /*virtual*/
+    bool checkAnswer(const string& answer) const;
+};
+
+class LowBot : public GameBot
+{
+public:
+    LowBot();
+};
+
+class MediumBot : public DontTrustrulBot
+{
+public:
+    MediumBot();
+protected:
+    /*virtual*/ 
+    void initBot();
+};
+
+class HardBot : public DontTrustrulBot
+{
+public:
+    HardBot();
 };
 
 #endif // GAMEBOT_H

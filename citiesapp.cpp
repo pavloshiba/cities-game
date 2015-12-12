@@ -1,6 +1,7 @@
 #include "citiesapp.h"
 #include "pssocket.h"
 #include "macroses.h"
+#include "BotManager.h"
 
 using std::cout;
 using std::cin;
@@ -62,13 +63,13 @@ void ServerApp::Start()
 
             cout << "Client connected: " << clientLocAddr << endl;
 
-            BOT_LEVEL botLevel;
+            int botLevel;
             client->recv(&botLevel, sizeof(botLevel));
 
-            GameBot bot(botLevel);
+            GameBot* bot = BotManager::getBot(botLevel);
             bool isEnd = false;
 
-            std::string responce = bot.getRandomCity();
+            std::string responce = bot->getRandomCity();
 
             client->send((void*)responce.c_str(),responce.size());
 
@@ -80,7 +81,7 @@ void ServerApp::Start()
 
                     cout << "Player " << clientLocAddr << " sad: " << recievingData << endl;
                    
-                    responce = bot.getResponse(recievingData);
+                    responce = bot->getResponse(recievingData);
 
                     if (BOT_WIN == responce)
                     {
@@ -94,10 +95,9 @@ void ServerApp::Start()
                     }
                     else if (BOT_FORB == responce)
                     {
-                        responce = PLAYER_INFO_MESSAGE(bot.getTries());
-                    }                  
-
-
+                        responce = PLAYER_INFO_MESSAGE(bot->getTries());
+                    }      
+                    
                   } // TODO: debug
                   else break;
                 
@@ -107,6 +107,7 @@ void ServerApp::Start()
                 if (isEnd)
                 {
                     client->close();
+                    delete bot;
                     break;
                 }
 
@@ -133,6 +134,7 @@ void ClientApp::Start()
     char replay = 'n';
     do
     {
+        //cin.ignore();
         psSocket mainSocket;
         char recievingData[BUFF_SIZE];
         std::string responce = "";
@@ -146,7 +148,8 @@ void ClientApp::Start()
             cout << "Connected....\n";
             cout << "Choose game difficulty(0 - easy, 1 - medium, 2 - hard)\n";
 
-            char botLevel = cin.get();
+            int botLevel ;
+            cin >> botLevel;
             cin.ignore();
 
             mainSocket.send((void*)&botLevel,sizeof(botLevel));
@@ -195,5 +198,5 @@ void ClientApp::Start()
         mainSocket.close();
         cout << "Would you like to replay?(y/n)";
 
-    }while (cin >> replay && replay == 'y');
+    } while (cin >> replay && cin.ignore() && replay == 'y');
 }

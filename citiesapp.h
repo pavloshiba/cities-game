@@ -1,7 +1,6 @@
 #ifndef CITIESAPP_H
 #define CITIESAPP_H
 #include "types.h"
-#include "gamebot.h"
 
 class psSocket;
 
@@ -28,7 +27,7 @@ class ClientApp : public CitiesApp
 public:
     ClientApp();
     ClientApp(const std::string& host, ushort port);
-   virtual void Start();
+    virtual void Start();
 private:
     std::string _host;
 };
