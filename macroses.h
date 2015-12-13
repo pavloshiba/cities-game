@@ -3,15 +3,10 @@
 
 #define INVALID_RESULT		-1
 
-#ifdef DEBUG_INFO_SHOWTIMER
-#	define START_TIMER(x) int64 x = GetTickCount64();
-#	define SHOW_TIME(x) cout << GetTickCount64() - x << endl;
-#else
-#	define START_TIMER(x)
-#	define SHOW_TIME(x)
-#endif
+template <typename T, size_t N>
+char (&ArraySizeHelper(T (&array)[N]))[N];
 
-#define ARRAY_SIZE(A) ( sizeof(A) / sizeof((A)[0]) )
+#define ARRAY_SIZE(array) (sizeof(ArraySizeHelper(array)))
 
 #define _MIN(a,b) (((a) > (b)) ? (b) : (a))
 #define _MAX(a,b) (((a) < (b)) ? (b) : (a))
