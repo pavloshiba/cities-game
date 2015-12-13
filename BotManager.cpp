@@ -16,8 +16,6 @@ GameBot* BotManager::getBot(int level)
     case 2:
         bot = new HardBot;
         break;
-        bot = new HardBot;
-        break;
     };
 
     return bot;
