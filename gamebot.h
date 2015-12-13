@@ -13,13 +13,6 @@
 #define BOT_LOSE_MESAGE "I\'m LOSE!"
 #define BOT_FORB_MESAGE "THIS NAME ILLEGAL!"
 
-enum class BOT_LEVEL
-{
-    LOW = 0,
-    MEDIUM,
-    HIGH
-};
-
 
 /// Bot doesn't check player's answer - trustful bot
 class GameBot
