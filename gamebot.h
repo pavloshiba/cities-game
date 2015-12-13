@@ -8,7 +8,6 @@
 #define BOT_LOSE "<"
 #define BOT_FORB "!"
 
-
 #define BOT_WIN_MESSAGE "I\'m WIN!"
 #define BOT_LOSE_MESAGE "I\'m LOSE!"
 #define BOT_FORB_MESAGE "THIS NAME ILLEGAL!"
@@ -64,9 +63,6 @@ class MediumBot : public DontTrustrulBot
 {
 public:
     MediumBot();
-protected:
-    /*virtual*/ 
-    void initBot();
 };
 
 class HardBot : public DontTrustrulBot
