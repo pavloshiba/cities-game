@@ -61,13 +61,18 @@ void ServerApp::Start()
             //PRE GAME PROCEDURE
             clientLocAddr = client->getLocalAddress();
 
-            cout << "Client connected: " << clientLocAddr << endl;
+            cout << "Client connected: " << clientLocAddr;
 
             int botLevel;
             client->recv(&botLevel, sizeof(botLevel));
 
             GameBot* bot = BotManager::getBot(botLevel);
             bool isEnd = false;
+
+            cout << ". Bot for new client created: level(" 
+                << botLevel 
+                << "), knowing cities("
+                << bot->getKnowingCities().size() << endl;
 
             std::string responce = bot->getRandomCity();
 
