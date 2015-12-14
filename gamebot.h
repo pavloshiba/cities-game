@@ -34,11 +34,21 @@ public:
     string getResponse(char* opponentAnswer);
     string getRandomCity();
     ushort getTries() const;
+
+    string_v getKnowingCities() const;
+    string_v getForbiddenCities() const;
+
     void reset();
 
 protected:
     GameBot();
+
+    /*
+    Initialize gamebot using CITY_DATA_FILE
+    botFactor is value that define size of cities bot knows
+    */
     void initBot(int botFactor);
+
     void removeCharsFromString(string &str, const string &charsToRemove );
 
 protected:

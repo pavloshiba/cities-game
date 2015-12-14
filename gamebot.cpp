@@ -16,64 +16,80 @@ ushort GameBot::getTries() const
 
 string GameBot::getResponse(string &opponentAnswer)
 {
-    if (_playerTries == 1) return BOT_WIN;
+    string result = BOT_FORB;
 
-    removeCharsFromString(opponentAnswer, INCORRECT_CHARACTERS);
-
-    if ((opponentAnswer.size() == 0) || (opponentAnswer[0] != _lastChar))
+    do
     {
-        --_playerTries;
-        return BOT_FORB;
-    }
-    else
-    {
-        auto it = find(_forbiddenCities.begin(),_forbiddenCities.end(),opponentAnswer);
+        if (_playerTries == 1) 
+        { 
+            result = BOT_WIN;
+            break;
+        }
 
-        if( !(it == _forbiddenCities.end()))
+        removeCharsFromString(opponentAnswer, INCORRECT_CHARACTERS);
+
+        if ((opponentAnswer.size() == 0) || (opponentAnswer[0] != _lastChar))
         {
             --_playerTries;
-            return BOT_FORB;
+            break;
         }
         else
         {
+            auto it = find(_forbiddenCities.begin(),_forbiddenCities.end(),opponentAnswer);
 
-            _forbiddenCities.push_back(opponentAnswer);
-
-            // know possible cities that not forbiden
-
-            string_v knowingCities = Cities::byFirstChar(_knowingCities,opponentAnswer.back());
-
-            string_v possibleAnswers(knowingCities.size());
-
-            Cities::citySort(knowingCities);
-            Cities::citySort(_forbiddenCities);
-
-            it = set_difference(knowingCities.begin(),knowingCities.end(),
-                                             _forbiddenCities.begin(),_forbiddenCities.end(),
-                                             possibleAnswers.begin());
-
-            possibleAnswers.resize(it - possibleAnswers.begin());
-
-
-
-            if(possibleAnswers.size() == 0)
-                return BOT_LOSE;
+            if( !(it == _forbiddenCities.end()))
+            {
+                --_playerTries;
+                break;
+            }
             else
             {
-                _forbiddenCities.push_back(possibleAnswers.at(0));
-                _lastChar = possibleAnswers.at(0).at(0);
 
-                return possibleAnswers.at(0);
-            }
+                _forbiddenCities.push_back(opponentAnswer);
+
+                // know possible cities that not forbiden
+
+                string_v knowingCities = Cities::byFirstChar(_knowingCities,opponentAnswer.back());
+
+                string_v possibleAnswers(knowingCities.size());
+
+                Cities::citySort(knowingCities);
+                Cities::citySort(_forbiddenCities);
+
+                it = set_difference(knowingCities.begin(),knowingCities.end(),
+                                                 _forbiddenCities.begin(),_forbiddenCities.end(),
+                                                 possibleAnswers.begin());
+
+                possibleAnswers.resize(it - possibleAnswers.begin());
+
+
+
+                if(possibleAnswers.size() == 0)
+                {
+                    result = BOT_LOSE;
+                    break;
+                }
+                else
+                {
+                    _forbiddenCities.push_back(possibleAnswers.at(0));
+                    _lastChar = possibleAnswers.at(0).at(0);
+                    //TODO: remove from _knowingAnswers
+                    result = possibleAnswers.at(0);
+                    break;
+                }
             
+            }
         }
-    }
+    } while(false);
+
+    return result;
 
 }
 
 string GameBot::getResponse(char *opponentAnswer)
 {
     string oponentAnswerStr(opponentAnswer);
+
     if (oponentAnswerStr.size() != 0)
         return this->getResponse(oponentAnswerStr);
     else 
@@ -94,10 +110,21 @@ string GameBot::getRandomCity()
     return result;
 }
 
+string_v GameBot::getKnowingCities() const
+{
+    return _knowingCities;
+}
+
+string_v GameBot::getForbiddenCities() const
+{
+    return _forbiddenCities;
+}
+
 void GameBot::reset()
 {
     _forbiddenCities.clear();
 }
+
 
 void GameBot::initBot(int botFactor)
 {
