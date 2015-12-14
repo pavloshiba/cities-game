@@ -1,7 +1,7 @@
 #ifndef _BOT_MANAGER_H_
 #define _BOT_MANAGER_H_
 
-#include "gamebot.h"
+#include "bots.h"
 
 class BotManager
 {
