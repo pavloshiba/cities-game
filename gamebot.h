@@ -12,6 +12,16 @@
 #define BOT_LOSE_MESAGE "I\'m LOSE!"
 #define BOT_FORB_MESAGE "THIS NAME ILLEGAL!"
 
+/*
+ * The number of possible wrong answers for
+ * the player depending on the complexity of the game
+*/
+#define PLAYER_TRIES_LOW    12
+#define PLAYER_TRIES_MEDIUM 6
+#define PLAYER_TRIES_HARD   3
+
+// incorrect cities name symbols
+const string INCORRECT_CHARACTERS = "0123456789-=`!@#$%^&*()_+-[]\'/|\\\",.<> ";
 
 /// Bot doesn't check player's answer - trustful bot
 class GameBot
@@ -23,9 +33,7 @@ public:
 
     string getResponse(char* opponentAnswer);
     string getRandomCity();
-    //BOT_LEVEL getLevel() const;
     ushort getTries() const;
-    //void      setLevel(BOT_LEVEL level);
     void reset();
 
 protected:
@@ -36,39 +44,8 @@ protected:
 protected:
     string_v  _knowingCities;
     string_v  _forbiddenCities;
-    //BOT_LEVEL _level;
     ushort    _playerTries;
     char      _lastChar;
-
-};
-
-class DontTrustrulBot : public GameBot
-{
-public:
-    /*virtual */ 
-    string getResponse(string &opponentAnswer);
-protected:
-    DontTrustrulBot();
-    /*virtual*/
-    bool checkAnswer(const string& answer) const;
-};
-
-class LowBot : public GameBot
-{
-public:
-    LowBot();
-};
-
-class MediumBot : public DontTrustrulBot
-{
-public:
-    MediumBot();
-};
-
-class HardBot : public DontTrustrulBot
-{
-public:
-    HardBot();
 };
 
 #endif // GAMEBOT_H

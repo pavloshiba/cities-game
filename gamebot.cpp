@@ -5,20 +5,7 @@
 
 using std::string;
 
-// incorrect cities name symbols
-const string INCORRECT_CHARACTERS = "0123456789-=`!@#$%^&*()_+-[]\'/|\\\",.<> ";
-
-/*
- * The number of possible wrong answers for
- * the player depending on the complexity of the game
-*/
-#define PLAYER_TRIES_LOW    12
-#define PLAYER_TRIES_MEDIUM 6
-#define PLAYER_TRIES_HARD   3
-
-GameBot::GameBot()
-{
-}
+GameBot::GameBot(){}
 
 GameBot::~GameBot() {}
 
@@ -131,59 +118,4 @@ void GameBot::removeCharsFromString(string &str, const string& charsToRemove)
       str.erase(std::remove(str.begin(), str.end(), charsToRemove[i]), str.end());
    }
 }
-
-LowBot::LowBot()
-{
-    int lowBotFactor = 12;
-    GameBot::initBot(lowBotFactor);
-    _playerTries = PLAYER_TRIES_LOW;
-}
-
-MediumBot::MediumBot()
-{
-    int mediumBotFactor = 5;
-    GameBot::initBot(mediumBotFactor);
-    _playerTries = PLAYER_TRIES_MEDIUM;
-}
-
-HardBot::HardBot()
-{
-    GameBot::initBot(1);
-    _playerTries = PLAYER_TRIES_HARD;
-}
-
-DontTrustrulBot::DontTrustrulBot() {}
-
-bool DontTrustrulBot::checkAnswer(const string& answer) const
-{
-    bool res = false;
-
-    auto it = std::find(_knowingCities.begin(),_knowingCities.end(), answer);
-
-    if(it != _knowingCities.end())
-        res = true;
-
-    return res;
-}
-
-/*virtual*/
-string DontTrustrulBot::getResponse(string& opponentAnswer)
-{
-    string res;
-    if(checkAnswer(opponentAnswer))
-        res = GameBot::getResponse(opponentAnswer);
-    else
-    {
-        --_playerTries;
-        if (_playerTries == 1)
-            res = BOT_WIN;
-        else
-            res = BOT_FORB;
-    }
-
-    return res;
-}
-
-
-
 
