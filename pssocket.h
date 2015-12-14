@@ -10,7 +10,6 @@
 
 // A flag that describes what types of operation will no longer be allowed.
 // Shutdown receive operations & shutdown send operations
-
 #	define SD_BOTH 2
     typedef int SOCKET;
 
