@@ -1,23 +1,22 @@
-#include "StdAfx.h"
 #include "citiesapp.h"
+#include <iostream>
 
-using namespace std;
+using std::cin;
+using std::cout;
 
-#define SERVER_APP  1
-
-void showOptions()
+void ShowAppOptions()
 {
     cout << "1 - start server\n";
     cout << "else number - start client\n";
 
 }
 
-int main(int argc, char* argv[])
+int main()
 {
     CitiesApp* game;
     int appOption = 0;
 
-    showOptions();
+    ShowAppOptions();
 
     cin >> appOption;
     cin.ignore();

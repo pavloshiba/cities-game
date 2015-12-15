@@ -1,4 +1,3 @@
-#include "StdAfx.h"
 #include "pssocket.h"
 
 #include "platform.h"
@@ -49,9 +48,9 @@ void initSocket_()
 #	include <arpa/inet.h>
 #	include <errno.h>
 
-#	define SOCKETError_ (-1)
+#	define SOCKET_ERROR (-1)
 
-enum { INVALIDSocket_ = -1 };
+enum { INVALID_SOCKET = -1 };
 
 void initSocket_() { }
 
@@ -124,7 +123,7 @@ string psSocket::GetIpByName(const string &sHostName)
     {
         return inet_ntoa(*(in_addr *)*pHost->h_addr_list);
     }
-    else if (IpValid(sHostName))
+    else if (isIpValid(sHostName))
     {
         return sHostName;
     }
@@ -136,7 +135,7 @@ string psSocket::GetIpByName(const string &sHostName)
 }
 
 /*static */
-bool psSocket::IpValid(const string &ip)
+bool psSocket::isIpValid(const string &ip)
 {
     return inet_addr(ip.c_str()) != INADDR_NONE;
 }

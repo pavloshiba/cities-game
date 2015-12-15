@@ -50,7 +50,7 @@ public:
 public:
     static int GetLastError();
     static string GetIpByName(const string &sHostName);
-    static bool IpValid(const string &ip);
+    static bool isIpValid(const string &ip);
 
 public:
     bool connect(const string &sHostName, ushort usPort);

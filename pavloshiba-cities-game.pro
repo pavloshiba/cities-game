@@ -16,7 +16,6 @@ SOURCES += main.cpp \
 
 HEADERS += \
     pssocket.h \
-    StdAfx.h \
     asserts.h \
     platform.h \
     types.h \

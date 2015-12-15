@@ -49,12 +49,12 @@ string GameBot::getResponse(string &opponentAnswer)
 
                 // know possible cities that not forbiden
 
-                string_v knowingCities = Cities::byFirstChar(knowingCities_,opponentAnswer.back());
+                string_v knowingCities = Cities::citiesByFirstChar(knowingCities_,opponentAnswer.back());
 
                 string_v possibleAnswers(knowingCities.size());
 
-                Cities::citySort(knowingCities);
-                Cities::citySort(forbiddenCities_);
+                Cities::citiesSort(knowingCities);
+                Cities::citiesSort(forbiddenCities_);
 
                 it = set_difference(knowingCities.begin(),knowingCities.end(),
                                                  forbiddenCities_.begin(),forbiddenCities_.end(),
@@ -135,7 +135,7 @@ void GameBot::initBot(int botFactor)
     int eraseCount = knowingCities_.size() - (int)knowingCities_.size()/botFactor;
 
     knowingCities_.erase(knowingCities_.begin(), knowingCities_.begin() + eraseCount);
-    Cities::citySort(knowingCities_);
+    Cities::citiesSort(knowingCities_);
 }
 
 void GameBot::removeCharsFromString(string &str, const string& charsToRemove)

@@ -16,11 +16,11 @@ namespace Cities
     bool findCity(const string_v& cities, string cityName);
     string getRandomCity(const string_v& cities);
 
-    string_v byFirstChar(const string_v& cities, char ch);
-    string_v byLastChar(const string_v& cities, char ch);
+    string_v citiesByFirstChar(const string_v& cities, char ch);
+    string_v citiesByLastChar(const string_v& cities, char ch);
 
     bool initData(const string& dataFile, string_v& cities);
-    void citySort(string_v& cities);
+    void citiesSort(string_v& cities);
 }
 
 #endif // CITIES_H

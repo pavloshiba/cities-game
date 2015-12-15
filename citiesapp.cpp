@@ -2,6 +2,7 @@
 #include "pssocket.h"
 #include "macroses.h"
 #include "BotManager.h"
+#include <iostream>
 
 using std::cout;
 using std::cin;

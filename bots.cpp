@@ -1,4 +1,5 @@
 #include "bots.h"
+#include <algorithm>
 
 LowBot::LowBot()
 {

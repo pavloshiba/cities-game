@@ -2,7 +2,6 @@
 #define __TYPES__
 
 #include "platform.h"
-#include "StdAfx.h"
 
 #include <string>
 #include <vector>
@@ -35,6 +34,8 @@ typedef unsigned long long int uint64;
 
 #define DEFAULT_APP_PORT        1993
 #define DEFAULT_APP_HOST        "localhost"
+
+#define SERVER_APP  1
 
 typedef unsigned short ushort;
 typedef unsigned long ulong;

@@ -18,7 +18,7 @@ string Cities::getRandomCity(const string_v& cities)
     return cities.at(randomIndex);
 }
 
-string_v Cities::byFirstChar(const string_v &cities, char ch)
+string_v Cities::citiesByFirstChar(const string_v &cities, char ch)
 {
     string_v result;
     ch = tolower(ch);
@@ -39,7 +39,7 @@ string_v Cities::byFirstChar(const string_v &cities, char ch)
     return result;
 }
 
-string_v Cities::byLastChar(const string_v& cities, char ch)
+string_v Cities::citiesByLastChar(const string_v& cities, char ch)
 {
     string_v result;
     ch = tolower(ch);
@@ -94,7 +94,7 @@ bool Cities::initData(const string &dataFile, string_v &cities)
     return true;
 }
 
-void Cities::citySort(string_v& cities)
+void Cities::citiesSort(string_v& cities)
 {
     std::sort(cities.begin(),cities.end());
 }
