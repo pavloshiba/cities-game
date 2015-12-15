@@ -4,7 +4,7 @@
 #include "types.h"
 
 #ifdef WINDOWS
-    #define CITY_DATA_FILE "D:\\Dropbox\\Projects\\cities_socket_gl\\Debug\\cities.dat"
+    #define CITY_DATA_FILE "\\cities.dat"
 #else
     #define CITY_DATA_FILE "cities.dat"
 #endif

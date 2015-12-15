@@ -33,7 +33,7 @@ CitiesApp::CitiesApp(ushort port) : port_(port)
 {}
 
 ServerApp::ServerApp()
-    : CitiesApp(DEFAULT_APP_port)
+    : CitiesApp(DEFAULT_APP_PORT)
 {}
 
 ServerApp::ServerApp(ushort port)
@@ -123,7 +123,7 @@ void ServerApp::Start()
 }
 
 ClientApp::ClientApp()
-    : CitiesApp(DEFAULT_APP_port),
+    : CitiesApp(DEFAULT_APP_PORT),
       host_(DEFAULT_APP_HOST)
 {}
 
@@ -144,7 +144,7 @@ void ClientApp::Start()
 
         memset(recievingData,0,ARRAY_SIZE(recievingData));
 
-        cout << "Start connecting to " << DEFAULT_APP_HOST << " " << DEFAULT_APP_port << endl;
+        cout << "Start connecting to " << DEFAULT_APP_HOST << " " << DEFAULT_APP_PORT << endl;
 
         if (mainSocket.connect(host_, port_))
         {
