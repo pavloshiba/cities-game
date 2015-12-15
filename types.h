@@ -31,7 +31,7 @@ typedef unsigned long long int uint64;
 #endif
 
 
-#define BITS_IN_BYTE	8
+#define BITS_IN_BYTE 8
 
 #define DEFAULT_APP_PORT        1993
 #define DEFAULT_APP_HOST        "localhost"
