@@ -29,11 +29,11 @@ const char START_MESSAGE[] = "Hello! Let's play!(Press '-' to surrender)";
 const char OVER_MESSAGE[] =  "Game over! Buy!";
 
 
-CitiesApp::CitiesApp(ushort port) : _port(port)
+CitiesApp::CitiesApp(ushort port) : port_(port)
 {}
 
 ServerApp::ServerApp()
-    : CitiesApp(DEFAULT_APP_PORT)
+    : CitiesApp(DEFAULT_APP_port)
 {}
 
 ServerApp::ServerApp(ushort port)
@@ -46,7 +46,7 @@ void ServerApp::Start()
 
     cout << "Server started....\n";
 
-    mainSocket.listen(_port);
+    mainSocket.listen(port_);
     
     while(psSocket* client = mainSocket.accept())
     {
@@ -71,9 +71,9 @@ void ServerApp::Start()
 
             cout << ". Bot for new client created: level(" 
                 << botLevel 
-                << "), knowing cities("
+                << "), knowing cities - "
                 << bot->getKnowingCities().size() << endl;
-
+            
             std::string responce = bot->getRandomCity();
 
             client->send((void*)responce.c_str(),responce.size());
@@ -103,9 +103,8 @@ void ServerApp::Start()
                         responce = PLAYER_INFO_MESSAGE(bot->getTries());
                     }      
                     
-                  } // TODO: debug
-                  else break;
-                
+                  }
+                  else break;                
                     
                 client->send((void*)responce.c_str(),BUFF_SIZE);
 
@@ -117,22 +116,21 @@ void ServerApp::Start()
                 }
 
             } while (true);
-    } // end client
+         } // end client
        // else cout << "Cannot accept client\n";
     }
     
 }
 
 ClientApp::ClientApp()
-    : CitiesApp(DEFAULT_APP_PORT),
-      _host(DEFAULT_APP_HOST)
+    : CitiesApp(DEFAULT_APP_port),
+      host_(DEFAULT_APP_HOST)
 {}
 
 ClientApp::ClientApp(const std::string &host, ushort port)
     : CitiesApp(port),
-      _host(host)
-{
-}
+      host_(host)
+{}
 
 void ClientApp::Start()
 {
@@ -146,9 +144,9 @@ void ClientApp::Start()
 
         memset(recievingData,0,ARRAY_SIZE(recievingData));
 
-        cout << "Start connecting to " << DEFAULT_APP_HOST << " " << DEFAULT_APP_PORT << endl;
+        cout << "Start connecting to " << DEFAULT_APP_HOST << " " << DEFAULT_APP_port << endl;
 
-        if (mainSocket.connect(_host, _port))
+        if (mainSocket.connect(host_, port_))
         {
             cout << "Connected....\n";
             cout << "Choose game difficulty(0 - easy, 1 - medium, 2 - hard)\n";

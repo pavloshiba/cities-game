@@ -11,7 +11,7 @@ GameBot::~GameBot() {}
 
 ushort GameBot::getTries() const
 { 
-    return _playerTries;
+    return playerTries_;
 }
 
 string GameBot::getResponse(string &opponentAnswer)
@@ -20,7 +20,7 @@ string GameBot::getResponse(string &opponentAnswer)
 
     do
     {
-        if (_playerTries == 1) 
+        if (playerTries_ == 1) 
         { 
             result = BOT_WIN;
             break;
@@ -28,36 +28,36 @@ string GameBot::getResponse(string &opponentAnswer)
 
         removeCharsFromString(opponentAnswer, INCORRECT_CHARACTERS);
 
-        if ((opponentAnswer.size() == 0) || (opponentAnswer[0] != _lastChar))
+        if ((opponentAnswer.size() == 0) || (opponentAnswer[0] != lastChar_))
         {
-            --_playerTries;
+            --playerTries_;
             break;
         }
         else
         {
-            auto it = find(_forbiddenCities.begin(),_forbiddenCities.end(),opponentAnswer);
+            auto it = find(forbiddenCities_.begin(),forbiddenCities_.end(),opponentAnswer);
 
-            if( !(it == _forbiddenCities.end()))
+            if( !(it == forbiddenCities_.end()))
             {
-                --_playerTries;
+                --playerTries_;
                 break;
             }
             else
             {
 
-                _forbiddenCities.push_back(opponentAnswer);
+                forbiddenCities_.push_back(opponentAnswer);
 
                 // know possible cities that not forbiden
 
-                string_v knowingCities = Cities::byFirstChar(_knowingCities,opponentAnswer.back());
+                string_v knowingCities = Cities::byFirstChar(knowingCities_,opponentAnswer.back());
 
                 string_v possibleAnswers(knowingCities.size());
 
                 Cities::citySort(knowingCities);
-                Cities::citySort(_forbiddenCities);
+                Cities::citySort(forbiddenCities_);
 
                 it = set_difference(knowingCities.begin(),knowingCities.end(),
-                                                 _forbiddenCities.begin(),_forbiddenCities.end(),
+                                                 forbiddenCities_.begin(),forbiddenCities_.end(),
                                                  possibleAnswers.begin());
 
                 possibleAnswers.resize(it - possibleAnswers.begin());
@@ -71,8 +71,8 @@ string GameBot::getResponse(string &opponentAnswer)
                 }
                 else
                 {
-                    _forbiddenCities.push_back(possibleAnswers.at(0));
-                    _lastChar = possibleAnswers.at(0).at(0);
+                    forbiddenCities_.push_back(possibleAnswers.at(0));
+                    lastChar_ = possibleAnswers.at(0).at(0);
                     //TODO: remove from _knowingAnswers
                     result = possibleAnswers.at(0);
                     break;
@@ -94,7 +94,7 @@ string GameBot::getResponse(char *opponentAnswer)
         return this->getResponse(oponentAnswerStr);
     else 
     {
-        --_playerTries;
+        --playerTries_;
         return BOT_FORB;
     }
 }
@@ -102,40 +102,40 @@ string GameBot::getResponse(char *opponentAnswer)
 string GameBot::getRandomCity()
 {
     srand((unsigned)time(0));
-    int randIndex = rand()%_knowingCities.size() + 1;
+    int randIndex = rand()%knowingCities_.size() + 1;
 
-    std::string result = _knowingCities.at(randIndex);
-    _lastChar = result.back();
+    std::string result = knowingCities_.at(randIndex);
+    lastChar_ = result.back();
 
     return result;
 }
 
 string_v GameBot::getKnowingCities() const
 {
-    return _knowingCities;
+    return knowingCities_;
 }
 
 string_v GameBot::getForbiddenCities() const
 {
-    return _forbiddenCities;
+    return forbiddenCities_;
 }
 
 void GameBot::reset()
 {
-    _forbiddenCities.clear();
+    forbiddenCities_.clear();
 }
 
 
 void GameBot::initBot(int botFactor)
 {
-    _forbiddenCities = string_v(0);
-    Cities::initData(CITY_DATA_FILE,_knowingCities);
-    random_shuffle(_knowingCities.begin(),_knowingCities.end());
+    forbiddenCities_ = string_v(0);
+    Cities::initData(CITY_DATA_FILE,knowingCities_);
+    random_shuffle(knowingCities_.begin(),knowingCities_.end());
 
-    int eraseCount = _knowingCities.size() - (int)_knowingCities.size()/botFactor;
+    int eraseCount = knowingCities_.size() - (int)knowingCities_.size()/botFactor;
 
-    _knowingCities.erase(_knowingCities.begin(), _knowingCities.begin() + eraseCount);
-    Cities::citySort(_knowingCities);
+    knowingCities_.erase(knowingCities_.begin(), knowingCities_.begin() + eraseCount);
+    Cities::citySort(knowingCities_);
 }
 
 void GameBot::removeCharsFromString(string &str, const string& charsToRemove)

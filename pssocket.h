@@ -82,12 +82,12 @@ public:
     ESOCKETERRROR getError() const;
 
 private:
-    struct sockaddr_in	_LocalAddr;
-    struct sockaddr_in	_RemoteAddr;
-    SOCKET              _Socket;
-    bool                _Connected;
+    struct sockaddr_in	LocalAddr_;
+    struct sockaddr_in	RemoteAddr_;
+    SOCKET              Socket_;
+    bool                Connected_;
 
-    ESOCKETERRROR       _Error;
+    ESOCKETERRROR       Error_;
 };
 
 #endif // __XSOCKET_H_INCLUDED

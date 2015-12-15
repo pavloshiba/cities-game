@@ -45,17 +45,17 @@ protected:
 
     /*
     Initialize gamebot using CITY_DATA_FILE
-    botFactor is value that define size of cities bot knows
+    botFactor is value that define size of cities bot knowns
     */
     void initBot(int botFactor);
 
     void removeCharsFromString(string &str, const string &charsToRemove );
 
 protected:
-    string_v  _knowingCities;
-    string_v  _forbiddenCities;
-    ushort    _playerTries;
-    char      _lastChar;
+    string_v  knowingCities_;
+    string_v  forbiddenCities_;
+    ushort    playerTries_;
+    char      lastChar_;
 };
 
 #endif // GAMEBOT_H

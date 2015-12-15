@@ -25,7 +25,7 @@ bool g_bWsaInitialized;
 unsigned char  bLow = 2;
 unsigned char  bHigh = 2;
 
-void init_socket()
+void initSocket_()
 {
     if (!g_bWsaInitialized)
     {
@@ -49,11 +49,11 @@ void init_socket()
 #	include <arpa/inet.h>
 #	include <errno.h>
 
-#	define SOCKET_ERROR (-1)
+#	define SOCKETError_ (-1)
 
-enum { INVALID_SOCKET = -1 };
+enum { INVALIDSocket_ = -1 };
 
-void init_socket() { }
+void initSocket_() { }
 
 void IgnoreSigpipe()
 {
@@ -68,35 +68,35 @@ int closesocket(SOCKET socket)
 #endif
 
 
-const char *SOCKET_ERROR_ARRAY[SE__MAX] =
+const char *SOCKETError__ARRAY[SE__MAX] =
 {
-    "",	//SE_NO_ERROR,
+    "",	//SE_NOError_,
 
     "Unable to resolve name",			//SE_UNRESOLVED_NAME,
     "Incorrect ip address",				//SE_INVALID_IP,
 
-    "Unable to create socket",			//SE_CREATE_SOCKET_ERROR,
-    "Unable to establish connection",	//SE_CONNECTION_ERROR,
-    "Unable to bind port",				//SE_BIND_ERROR,
-    "Unable to listen port",			//SE_LISTEN_ERROR,
+    "Unable to create socket",			//SE_CREATESocket_Error_,
+    "Unable to establish connection",	//SE_CONNECTIONError_,
+    "Unable to bind port",				//SE_BINDError_,
+    "Unable to listen port",			//SE_LISTENError_,
 };
 
 
 const char *GetErrorDescription(ESOCKETERRROR error)
 {
     ASSERT(IN_RANGE(error, SE__MIN, SE__MAX));
-    return SOCKET_ERROR_ARRAY[error];
+    return SOCKETError__ARRAY[error];
 }
 
 psSocket::psSocket()
-    : _Socket(0)
-    , _Connected(false)
-    , _Error(SE_NO_ERROR)
+    : Socket_(0)
+    , Connected_(false)
+    , Error_(SE_NO_ERROR)
 {
-    init_socket();
+    initSocket_();
 
-    memset(&_LocalAddr, 0, sizeof(_LocalAddr));
-    memset(&_RemoteAddr, 0, sizeof(_RemoteAddr));
+    memset(&LocalAddr_, 0, sizeof(LocalAddr_));
+    memset(&RemoteAddr_, 0, sizeof(RemoteAddr_));
 }
 
 psSocket::~psSocket()
@@ -152,27 +152,27 @@ bool psSocket::connect(const string &sHostName, ushort usPort)
         string sAddress = GetIpByName(sHostName);
         if (sAddress.empty())
         {
-            _Error = SE_UNRESOLVED_NAME;
+            Error_ = SE_UNRESOLVED_NAME;
             return false;
         }
 
-        _LocalAddr.sin_family = AF_INET;
-        _LocalAddr.sin_addr.s_addr = inet_addr(sAddress.c_str());
-        _LocalAddr.sin_port = htons(usPort);
+        LocalAddr_.sin_family = AF_INET;
+        LocalAddr_.sin_addr.s_addr = inet_addr(sAddress.c_str());
+        LocalAddr_.sin_port = htons(usPort);
 
-        if (INVALID_SOCKET == (_Socket = socket(AF_INET, SOCK_STREAM, 0)))
+        if (INVALID_SOCKET == (Socket_ = socket(AF_INET, SOCK_STREAM, 0)))
         {
-            _Error = SE_CREATE_SOCKET_ERROR;
+            Error_ = SE_CREATE_SOCKET_ERROR;
             break;
         }
 
-        if (SOCKET_ERROR == ::connect(_Socket, (sockaddr *)&_LocalAddr, sizeof(_LocalAddr)))
+        if (SOCKET_ERROR == ::connect(Socket_, (sockaddr *)&LocalAddr_, sizeof(LocalAddr_)))
         {
-            _Error = SE_CONNECTION_ERROR;
+            Error_ = SE_CONNECTION_ERROR;
             break;
         }
 
-        bResult = _Connected = true;
+        bResult = Connected_ = true;
     }
     while (false);
 
@@ -187,27 +187,27 @@ bool psSocket::listen(ushort usPort, long lAddress /*= INADDR_ANY*/, int nMaxCli
 
     do
     {
-        _LocalAddr.sin_addr.s_addr = htonl(lAddress);
-        _LocalAddr.sin_port = htons(usPort);
-        _LocalAddr.sin_family = AF_INET;
+        LocalAddr_.sin_addr.s_addr = htonl(lAddress);
+        LocalAddr_.sin_port = htons(usPort);
+        LocalAddr_.sin_family = AF_INET;
 
-        if (INVALID_SOCKET == (_Socket = ::socket(AF_INET, SOCK_STREAM, 0)))
+        if (INVALID_SOCKET == (Socket_ = ::socket(AF_INET, SOCK_STREAM, 0)))
         {
             break;
         }
 
         int nOption = 1;
-        if (SOCKET_ERROR == ::setsockopt(_Socket, SOL_SOCKET, SO_REUSEADDR, (char *)&nOption, sizeof(nOption)))
+        if (SOCKET_ERROR == ::setsockopt(Socket_, SOL_SOCKET, SO_REUSEADDR, (char *)&nOption, sizeof(nOption)))
         {
             break;
         }
 
-        if (SOCKET_ERROR == ::bind(_Socket, (struct sockaddr *)&_LocalAddr, sizeof(_LocalAddr)))
+        if (SOCKET_ERROR == ::bind(Socket_, (struct sockaddr *)&LocalAddr_, sizeof(LocalAddr_)))
         {
             break;
         }
 
-        if (SOCKET_ERROR == ::listen(_Socket, nMaxClient))
+        if (SOCKET_ERROR == ::listen(Socket_, nMaxClient))
         {
             break;
         }
@@ -232,8 +232,8 @@ psSocket *psSocket::accept() const
     psSocket *psResultSocket = NULL;
 
     SOCKET clientSocket;
-    socklen_t nAddressLen = sizeof(_RemoteAddr);
-    if (INVALID_SOCKET == (clientSocket = ::accept(_Socket, (struct sockaddr *)&_RemoteAddr, &nAddressLen)))
+    socklen_t nAddressLen = sizeof(RemoteAddr_);
+    if (INVALID_SOCKET == (clientSocket = ::accept(Socket_, (struct sockaddr *)&RemoteAddr_, &nAddressLen)))
     {
         return NULL;
     }
@@ -244,10 +244,10 @@ psSocket *psSocket::accept() const
         return NULL;
     }
 
-    psResultSocket->_Socket = clientSocket;
-    psResultSocket->_LocalAddr = _LocalAddr;
-    psResultSocket->_RemoteAddr = _RemoteAddr;
-    psResultSocket->_Connected = true;
+    psResultSocket->Socket_ = clientSocket;
+    psResultSocket->LocalAddr_ = LocalAddr_;
+    psResultSocket->RemoteAddr_ = RemoteAddr_;
+    psResultSocket->Connected_ = true;
 
     return psResultSocket;
 }
@@ -255,20 +255,20 @@ psSocket *psSocket::accept() const
 
 bool psSocket::shutdown(int nMode /*= SD_BOTH*/)
 {
-    _Connected = false;
-    return ::shutdown(_Socket, nMode) == 0;
+    Connected_ = false;
+    return ::shutdown(Socket_, nMode) == 0;
 }
 
 bool psSocket::close()
 {
     int res = 0;
 
-    if (_Socket != INVALID_SOCKET)
+    if (Socket_ != INVALID_SOCKET)
     {
-        res = ::closesocket(_Socket);
+        res = ::closesocket(Socket_);
     }
 
-    _Connected = false;
+    Connected_ = false;
     return res == 0;
 }
 
@@ -301,18 +301,18 @@ long psSocket::send(void *data, int nLength)
 
     do
     {
-        int nSendResult = ::send(_Socket, data_ptr, nLength, 0);
+        int nSendResult = ::send(Socket_, data_ptr, nLength, 0);
 #ifdef SOCKET_DEBUG
         cout << nSendResult << " bytes send -- ";
         dump_buffer(data_ptr, nSendResult);
 #endif
         if (SOCKET_ERROR == nSendResult)
         {
-            int last_error = GetLastError();
+            int lastError_ = GetLastError();
 #ifdef WINDOWS
-            if (WSA_IO_PENDING != last_error)
+            if (WSA_IO_PENDING != lastError_)
 #else // LINUX
-            if (EAGAIN != last_error)
+            if (EAGAIN != lastError_)
 #endif
             {
                 //cout << "NOT WAS_IO_PENDING" << endl;
@@ -346,18 +346,18 @@ long psSocket::recv(void *buffer, int nLength)
 
     do
     {
-        int nRecvResult = ::recv(_Socket, buffer_ptr, nLength, 0);
+        int nRecvResult = ::recv(Socket_, buffer_ptr, nLength, 0);
 #ifdef SOCKET_DEBUG
         cout << nRecvResult << " bytes recv -- ";
         dump_buffer(buffer_ptr, nRecvResult);
 #endif
         if (SOCKET_ERROR == nRecvResult)
         {
-            int last_error = GetLastError();
+            int lastError_ = GetLastError();
 #ifdef WINDOWS
-            if (WSA_IO_PENDING != last_error)
+            if (WSA_IO_PENDING != lastError_)
 #else // LINUX
-            if (EAGAIN != last_error)
+            if (EAGAIN != lastError_)
 #endif
             {
                 //cout << "NOT WAS_IO_PENDING" << endl;
@@ -392,45 +392,45 @@ ushort psSocket::getLocalPort() const
 {
     sockaddr saPeer;
     socklen_t nPeerLen = sizeof(saPeer);
-    return getsockname(_Socket, &saPeer, &nPeerLen) ? 0 : ntohs(((sockaddr_in *)&saPeer)->sin_port);
+    return getsockname(Socket_, &saPeer, &nPeerLen) ? 0 : ntohs(((sockaddr_in *)&saPeer)->sin_port);
 }
 
 ushort psSocket::getRemotePort() const
 {
-    ASSERTE(_Connected == true);
+    ASSERTE(Connected_ == true);
     sockaddr saPeer;
     socklen_t nPeerLen = sizeof(saPeer);
-    return getpeername(_Socket, &saPeer, &nPeerLen) ? 0 : ntohs(((sockaddr_in *)&saPeer)->sin_port);
+    return getpeername(Socket_, &saPeer, &nPeerLen) ? 0 : ntohs(((sockaddr_in *)&saPeer)->sin_port);
 }
 
 
 const char *psSocket::getLocalAddress() const
 {
-    ASSERTE(_Socket);
+    ASSERTE(Socket_);
 
     sockaddr saPeer;
     socklen_t nPeerLen  = sizeof(saPeer);
-    return getsockname(_Socket, &saPeer, &nPeerLen) ? szEMPTY_ADRESS : inet_ntoa(((sockaddr_in *)&saPeer)->sin_addr);
+    return getsockname(Socket_, &saPeer, &nPeerLen) ? szEMPTY_ADRESS : inet_ntoa(((sockaddr_in *)&saPeer)->sin_addr);
 }
 
 const char *psSocket::getRemoteAddress() const
 {
-    ASSERTE(_Connected == true);
+    ASSERTE(Connected_ == true);
 
     sockaddr saPeer;
     socklen_t nPeerLen  = sizeof(saPeer);
-    return getpeername(_Socket, &saPeer, &nPeerLen) ? szEMPTY_ADRESS : inet_ntoa(((sockaddr_in *)&saPeer)->sin_addr);
+    return getpeername(Socket_, &saPeer, &nPeerLen) ? szEMPTY_ADRESS : inet_ntoa(((sockaddr_in *)&saPeer)->sin_addr);
 }
 
 
 uint psSocket::getRaddr() const
 {
-    return (uint)_RemoteAddr.sin_addr.s_addr;
+    return (uint)RemoteAddr_.sin_addr.s_addr;
 }
 
 uint psSocket::getLaddr() const
 {
-    return (uint)_LocalAddr.sin_addr.s_addr;
+    return (uint)LocalAddr_.sin_addr.s_addr;
 }
 
 
@@ -451,10 +451,10 @@ string psSocket::getRemoteEndpoint() const
 
 bool psSocket::isConnected() const
 {
-    return _Connected;
+    return Connected_;
 }
 
 ESOCKETERRROR psSocket::getError() const
 {
-    return _Error;
+    return Error_;
 }

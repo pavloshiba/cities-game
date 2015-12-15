@@ -11,7 +11,7 @@ public:
     virtual ~CitiesApp(){}
     virtual void Start() = 0;
 protected:
-    ushort _port;
+    ushort port_;
 };
 
 class ServerApp : public CitiesApp
@@ -29,7 +29,7 @@ public:
     ClientApp(const std::string& host, ushort port);
     virtual void Start();
 private:
-    std::string _host;
+    std::string host_;
 };
 
 #endif // CITIESAPP_H

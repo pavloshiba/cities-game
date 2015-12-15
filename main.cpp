@@ -1,7 +1,4 @@
 #include "StdAfx.h"
-
-#include <iostream>
-#include "pssocket.h"
 #include "citiesapp.h"
 
 using namespace std;

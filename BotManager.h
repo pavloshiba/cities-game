@@ -7,6 +7,9 @@ class BotManager
 {
 public:
     static GameBot* getBot(int level);
+protected:
+    BotManager();
+    BotManager(const BotManager&);
 };
 
 #endif

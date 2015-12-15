@@ -4,20 +4,20 @@ LowBot::LowBot()
 {
     int lowBotFactor = 12;
     GameBot::initBot(lowBotFactor);
-    _playerTries = PLAYER_TRIES_LOW;
+    playerTries_= PLAYER_TRIES_LOW;
 }
 
 MediumBot::MediumBot()
 {
     int mediumBotFactor = 5;
     GameBot::initBot(mediumBotFactor);
-    _playerTries = PLAYER_TRIES_MEDIUM;
+    playerTries_= PLAYER_TRIES_MEDIUM;
 }
 
 HardBot::HardBot()
 {
     GameBot::initBot(1);
-    _playerTries = PLAYER_TRIES_HARD;
+    playerTries_= PLAYER_TRIES_HARD;
 }
 
 DontTrustrulBot::DontTrustrulBot() {}
@@ -26,9 +26,9 @@ bool DontTrustrulBot::checkAnswer(const string& answer) const
 {
     bool res = false;
 
-    auto it = std::find(_knowingCities.begin(),_knowingCities.end(), answer);
+    auto it = std::find(knowingCities_.begin(),knowingCities_.end(), answer);
 
-    if(it != _knowingCities.end())
+    if(it != knowingCities_.end())
         res = true;
 
     return res;
@@ -42,8 +42,8 @@ string DontTrustrulBot::getResponse(string& opponentAnswer)
         res = GameBot::getResponse(opponentAnswer);
     else
     {
-        --_playerTries;
-        if (_playerTries == 1)
+        --playerTries_;
+        if (playerTries_== 1)
             res = BOT_WIN;
         else
             res = BOT_FORB;
