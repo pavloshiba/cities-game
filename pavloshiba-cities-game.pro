@@ -10,7 +10,9 @@ SOURCES += main.cpp \
     pssocket.cpp \
     cities.cpp \
     gamebot.cpp \
-    citiesapp.cpp
+    citiesapp.cpp\
+    bots.cpp \
+    BotManager.cpp
 
 HEADERS += \
     pssocket.h \
@@ -21,4 +23,6 @@ HEADERS += \
     cities.h \
     gamebot.h \
     citiesapp.h \
-    macroses.h
+    macroses.h \
+    bots.h \
+    BotManager.h
