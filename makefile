@@ -1,0 +1,21 @@
+CC            = gcc
+CXX           = g++
+LINK          = g++
+LFLAGS        = -m64
+CFLAGS        = -m64 -pipe -g -Wall -W -fPIE
+CXXFLAGS      = -m64 -pipe -std=c++11 -g -std=c++0x -Wall -W -fPIE 
+
+SOURCES=$(shell find . -name "*.cpp")
+OBJECTS=$(SOURCES:%.cpp=%.o)
+TARGET        = pavloshiba-cities-game
+
+all:    $(TARGET)
+	
+$(TARGET):  $(OBJECTS)  
+	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)
+.cpp.o:
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o "$@" "$<"
+
+.PHONY: clean	
+clean:
+	rm $(OBJECTS) $(TARGET) 
