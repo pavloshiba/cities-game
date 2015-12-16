@@ -1,20 +1,26 @@
 CC            = gcc
 CXX           = g++
-LINK          = g++
-LFLAGS        = -m64
-CFLAGS        = -m64 -pipe -g -Wall -W -fPIE
-CXXFLAGS      = -m64 -pipe -std=c++11 -g -std=c++0x -Wall -W -fPIE 
+CXXFLAGS      = -std=c++11 -g -Wall
+ifeq ($(OS),Windows_NT)
+LDLIBS        = -lws2_32
+endif
 
-SOURCES=$(shell find . -name "*.cpp")
+SOURCES=  cities.cpp gamebot.cpp bots.cpp BotManager.cpp pssocket.cpp  citiesapp.cpp main.cpp
 OBJECTS=$(SOURCES:%.cpp=%.o)
-TARGET        = pavloshiba-cities-game
+TARGET        = cities-game
 
 all:    $(TARGET)
+
+
+$(TARGET):  $(OBJECTS) 
+ifeq ($(OS),Windows_NT)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDLIBS)
+else	
+	$(CXX) $(CXXFLAGS) $^ -o $@
+endif 
 	
-$(TARGET):  $(OBJECTS)  
-	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)
 .cpp.o:
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o "$@" "$<"
+	$(CXX) -c $(CXXFLAGS) -o "$@" "$<"
 
 .PHONY: clean	
 clean:
