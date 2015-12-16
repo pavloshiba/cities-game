@@ -2,7 +2,7 @@
 #define __PLATFORM_H_INCLUDED
 
 
-#if defined(WIN32) || defined (WIN64)
+#if defined(WIN32) || defined(_WIN32) || defined (WIN64)
 
 #	define WINDOWS
 #	define WIN32_LEAN_AND_MEAN

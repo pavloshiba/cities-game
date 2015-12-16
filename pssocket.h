@@ -2,6 +2,7 @@
 #define __XSOCKET_H_INCLUDED
 
 #include "types.h"
+
 #ifdef WINDOWS
 #	include <winsock2.h>
 #else

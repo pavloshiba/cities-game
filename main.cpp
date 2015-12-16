@@ -7,7 +7,7 @@ using std::cout;
 void ShowAppOptions()
 {
     cout << "1 - start server\n";
-    cout << "else number - start client\n";
+    cout << "else - start client\n";
 
 }
 

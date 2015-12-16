@@ -2,7 +2,7 @@
 
 #include "platform.h"
 #include "asserts.h"
-
+#include <stdio.h>
 
 //#define SOCKET_DEBUG
 #ifdef SOCKET_DEBUG
@@ -19,7 +19,7 @@ const int BUFF_SIZE = 24;
 #	pragma comment(lib, "ws2_32.lib")
     typedef int socklen_t;
 
-bool g_bWsaInitialized;
+bool g_bWsaInitialized =false;
 
 unsigned char  bLow = 2;
 unsigned char  bHigh = 2;
@@ -31,9 +31,8 @@ void initSocket_()
         WSADATA wdData;
 
         int nResult = WSAStartup(MAKEWORD(bLow,bHigh), &wdData);
-        ASSERTE(nResult == 0);
-
-        g_bWsaInitialized = true;
+        if (nResult != 0)
+            g_bWsaInitialized = true;
     }
 }
 

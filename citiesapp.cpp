@@ -3,7 +3,7 @@
 #include "macroses.h"
 #include "BotManager.h"
 #include <iostream>
-
+#include <string>
 using std::cout;
 using std::cin;
 using std::endl;
@@ -13,9 +13,22 @@ using std::memset;
 
 #define END_GAME_CHAR '-'
 
+#ifdef WINDOWS
+#include <sstream>
+
+template < typename T > std::string to_string( const T& n )
+{
+    std::ostringstream stm ;
+    stm << n ;
+    return stm.str() ;
+}
+
+#endif
+
+    
 #define PLAYER_INFO_MESSAGE(x)  (std::string(BOT_FORB_MESAGE) + \
                                  std::string(" You have ") + \
-                                 std::to_string(x) + \
+                                 to_string(x) + \
                                  std::string(" tries!"))
 
 #define SERVER_WIN_SIGNAL  BOT_WIN
