@@ -38,8 +38,8 @@
 
 #else
 #	define ASSERT_STR(__COND__, __STR__)
-#	define ASSERTE(__COND__) __COND__
-#	define ASSERT(__COND__) __COND__
+#	define ASSERTE(__COND__)
+#	define ASSERT(__COND__)
 #	define ASSERT_FAIL(__STR__)
 #	define ASSERT_NOT_IMPLEMENTED()
 #endif
