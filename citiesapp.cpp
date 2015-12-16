@@ -14,15 +14,16 @@ using std::memset;
 #define END_GAME_CHAR '-'
 
 #ifdef WINDOWS
-#include <sstream>
+    #include <sstream>
 
-template < typename T > std::string to_string( const T& n )
-{
-    std::ostringstream stm ;
-    stm << n ;
-    return stm.str() ;
-}
-
+    template < typename T > std::string to_string( const T& n )
+    {
+        std::ostringstream stm ;
+        stm << n ;
+        return stm.str() ;
+    }
+#else
+    using std::to_string;
 #endif
 
     
