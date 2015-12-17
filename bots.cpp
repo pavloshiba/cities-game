@@ -39,7 +39,8 @@ bool DontTrustrulBot::checkAnswer(const string& answer) const
 string DontTrustrulBot::getResponse(string& opponentAnswer)
 {
     string res;
-    if(checkAnswer(opponentAnswer))
+
+    if (checkAnswer(opponentAnswer))
         res = GameBot::getResponse(opponentAnswer);
     else
     {

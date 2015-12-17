@@ -22,11 +22,6 @@ typedef unsigned __int64 uint64;
 
 #	include <inttypes.h>
 
-//typedef int64_t int64;
-typedef long long int int64;
-//typedef uint64_t uint64;
-typedef unsigned long long int uint64;
-
 #endif
 
 

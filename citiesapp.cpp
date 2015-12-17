@@ -38,7 +38,7 @@ using std::memset;
 #define SERVER_LOSE_SIGNAL BOT_LOSE
 #define SERVER_LOSE_MESSAGE (std::string(BOT_LOSE_MESAGE) + std::string(OVER_MESSAGE))
 
-const int BUFF_SIZE = 127;
+const int MESSAGE_BUFF_SIZE = 80;
 
 const char START_MESSAGE[] = "Hello! Let's play!(Press '-' to surrender)";
 const char OVER_MESSAGE[] =  "Game over! Buy!";
@@ -69,11 +69,11 @@ void ServerApp::Start()
         if (client != NULL)
         {
             const char* clientLocAddr;
-            char recievingData[BUFF_SIZE];
+            char recievingData[MESSAGE_BUFF_SIZE];
 
             memset(recievingData,0,ARRAY_SIZE(recievingData));
 
-            //PRE GAME PROCEDURE
+            //PRE GAME PROCEDURE - get level
             clientLocAddr = client->getLocalAddress();
 
             cout << "Client connected: " << clientLocAddr;
@@ -95,8 +95,8 @@ void ServerApp::Start()
 
             do
             {
-                // BEGIN PLAY
-                if (client->recv(recievingData, BUFF_SIZE) != 0)
+                // BEGIN PLAY - send/recieve data
+                if (client->recv(recievingData, MESSAGE_BUFF_SIZE) != 0)
                 {
 
                     cout << "Player " << clientLocAddr << " sad: " << recievingData << endl;
@@ -121,7 +121,7 @@ void ServerApp::Start()
                   }
                   else break;                
                     
-                client->send((void*)responce.c_str(),BUFF_SIZE);
+                client->send((void*)responce.c_str(),MESSAGE_BUFF_SIZE);
 
                 if (isEnd)
                 {
@@ -154,7 +154,7 @@ void ClientApp::Start()
     {
         //cin.ignore();
         psSocket mainSocket;
-        char recievingData[BUFF_SIZE];
+        char recievingData[MESSAGE_BUFF_SIZE];
         std::string responce = "";
 
         memset(recievingData,0,ARRAY_SIZE(recievingData));
@@ -176,7 +176,7 @@ void ClientApp::Start()
             do
             {
 
-                if (mainSocket.recv(recievingData, BUFF_SIZE) != 0)
+                if (mainSocket.recv(recievingData, MESSAGE_BUFF_SIZE) != 0)
                 {
                     if (END_GAME_CHAR == responce[0])
                     {
@@ -201,7 +201,7 @@ void ClientApp::Start()
 
                     std::getline(std::cin,responce);
 
-                    mainSocket.send((void*)responce.c_str(),BUFF_SIZE);
+                    mainSocket.send((void*)responce.c_str(),MESSAGE_BUFF_SIZE);
 
                 } else break;
 

@@ -47,7 +47,7 @@ string GameBot::getResponse(string &opponentAnswer)
 
                 forbiddenCities_.push_back(opponentAnswer);
 
-                // know possible cities that not forbiden
+                // to know possible cities that not forbiden
 
                 string_v knowingCities = Cities::citiesByFirstChar(knowingCities_,opponentAnswer.back());
 
@@ -71,10 +71,22 @@ string GameBot::getResponse(string &opponentAnswer)
                 }
                 else
                 {
-                    forbiddenCities_.push_back(possibleAnswers.at(0));
-                    lastChar_ = possibleAnswers.at(0).at(0);
-                    //TODO: remove from _knowingAnswers
-                    result = possibleAnswers.at(0);
+                    auto  answer = possibleAnswers.at(0);
+                    forbiddenCities_.push_back(answer);
+                    lastChar_ = answer.at(0);
+
+                    //remove from _knowingAnswers - erase/remove way
+                    knowingCities_.erase(std::remove(knowingCities_.begin(),
+                                                     knowingCities_.end(),
+                                                     opponentAnswer),
+                                         knowingCities_.end());
+
+                    knowingCities_.erase(std::remove(knowingCities_.begin(),
+                                                     knowingCities_.end(),
+                                                    answer),
+                                         knowingCities_.end());
+
+                    result = answer;
                     break;
                 }
             
