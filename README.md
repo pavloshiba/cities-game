@@ -20,4 +20,5 @@ The game ends in cases where:
 
 
 Language/libraries: C/C++, STL;
+https://github.com/pavloshiba/cities-game.git
 
