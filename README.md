@@ -2,6 +2,8 @@
 Console client-server application – “Cities” word game.
 This application implement game "Cities" (*).
 
+To build: run make -f makefile
+
 To begin playing should first start the server: to do this, run the application and press 1
 
 To start the game, run the client:
